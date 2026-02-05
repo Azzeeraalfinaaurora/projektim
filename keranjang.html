@@ -1,11 +1,35 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Keranjang</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body class="bg-gray-100 p-10">
+    <h1 class="text-3xl font-bold mb-6">Keranjang Belanja</h1>
+
+    <div id="cart-items" class="space-y-4"></div>
+
+    <p class="mt-6 text-font-semibold">Total: Rp <span id="Total">0</span></p>
+
+    <script>
+      let cart = JSON.parse(localStorage.getItem("cart")) || [];
+      let total = 0;
+      let container = document.getElementById("cart-items");
+
+      cart.forEach((item) => {
+        total += item.price;
+        container.innerHTML += `
+        <div class="bg-white p-4 rounded shadow flex justify-between">
+          <span>${item.name}</span>
+          <span>Rp ${item.price.toLocaleString("id-ID")}</span>
+        </div>
+      `;
+      });
+
+      document.getElementById("total").innerText =
+        total.toLocaleString("id-ID");
+    </script>
+  </body>
 </html>
