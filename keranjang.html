@@ -1,9 +1,113 @@
 <!doctype html>
-<html lang="en">
+<html lang="id">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
+    <title>Keranjang Belanja</title>
+    <script src="https://cdn.tailwindcss.com"></script>
   </head>
-  <body></body>
+
+  <body
+    class="bg-gradient-to-br from-yellow-100 to-gray-100 min-h-screen flex justify-center py-10"
+  >
+    <div class="w-full max-w-2xl bg-white rounded-2xl shadow-xl p-6">
+      <!-- Header -->
+      <h1 class="text-3xl font-bold mb-6 text-gray-800 text-center">
+        🛒 Keranjang Belanja
+      </h1>
+
+      <!-- Cart Items -->
+      <div id="cart-items" class="space-y-4"></div>
+
+      <!-- Total -->
+      <div class="mt-6 flex justify-between items-center border-t pt-4">
+        <span class="text-lg font-semibold text-gray-700"
+          >Total Pembayaran</span
+        >
+        <span class="text-2xl font-bold text-yellow-600">
+          Rp <span id="total">0</span>
+        </span>
+      </div>
+
+      <!-- Button -->
+      <div class="mt-6 flex justify-between gap-3">
+        <a
+          href="index.html"
+          class="flex-1 text-center bg-gray-200 text-gray-700 px-6 py-2 rounded-xl hover:bg-gray-300 transition"
+        >
+          ← Kembali
+        </a>
+
+        <button
+          onclick="checkout()"
+          class="flex-1 bg-yellow-700 text-white px-6 py-2 rounded-xl hover:bg-green-700 transition font-semibold"
+        >
+          Checkout
+        </button>
+      </div>
+    </div>
+
+    <script>
+      let cart = JSON.parse(localStorage.getItem("cart")) || [];
+      let container = document.getElementById("cart-items");
+      let total = 0;
+
+      function renderCart() {
+        container.innerHTML = "";
+        total = 0;
+
+        if (cart.length === 0) {
+          container.innerHTML = `
+          <p class="text-center text-gray-500 py-10">
+            Keranjang masih kosong 🛍️
+          </p>
+        `;
+        } else {
+          cart.forEach((item, index) => {
+            total += item.price;
+            container.innerHTML += `
+            <div class="flex justify-between items-center bg-gray-50 p-4 rounded-xl border hover:shadow transition">
+              <div>
+                <p class="font-semibold text-gray-800">${item.name}</p>
+                <p class="text-sm text-gray-500">1 item</p>
+              </div>
+
+              <div class="flex items-center gap-4">
+                <p class="font-bold text-gray-700">
+                  Rp ${item.price.toLocaleString("id-ID")}
+                </p>
+                <button onclick="removeItem(${index})"
+                  class="text-red-500 hover:text-red-700 text-sm">
+                  ✕
+                </button>
+              </div>
+            </div>
+          `;
+          });
+        }
+
+        document.getElementById("total").innerText =
+          total.toLocaleString("id-ID");
+      }
+
+      function removeItem(index) {
+        cart.splice(index, 1);
+        localStorage.setItem("cart", JSON.stringify(cart));
+        renderCart();
+      }
+
+      function checkout() {
+        if (cart.length === 0) {
+          alert("Keranjang masih kosong 😅");
+          return;
+        }
+
+        alert("Checkout berhasil! 🎉");
+        localStorage.removeItem("cart");
+        cart = [];
+        renderCart();
+      }
+
+      renderCart();
+    </script>
+  </body>
 </html>
